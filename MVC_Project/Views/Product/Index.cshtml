@@ -1,0 +1,37 @@
+﻿@model IEnumerable<Product>
+
+<div class="container">
+    <table class="table">
+        <thead>
+            <th>Name</th>
+            <th>Category</th>
+            <th>Description</th>
+            <th>Price</th>
+            <th>Stock</th>
+            <th>Edit</th>
+            <th>Delete</th>
+        </thead>
+       <tbody>
+           @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.Name</td>
+                    <td>@item.Category.Name</td>
+                    <td>
+                        @(item.Description.Length > 50 ? item.Description.Substring(0, item.Description.Substring(0, 50).LastIndexOf(" ")) + "..." : item.Description + "...")
+                    </td>
+                    <td>@item.Price azn</td>
+                    <td>@item.Stock</td>
+                    <td>
+                        <a class="btn btn-warning" href="/product/edit/@item.ProductID">Edit</a>
+                    </td>
+                     <td>
+                        <a class="btn btn-danger" href="/product/delete/@item.ProductID"
+                          onclick="return confirm('Are you sure?')"  >Delete</a>
+                    </td>
+                </tr>
+            }
+       </tbody>
+    </table>
+    <a href="/product/create" class="btn btn-success">Create</a>
+</div>
