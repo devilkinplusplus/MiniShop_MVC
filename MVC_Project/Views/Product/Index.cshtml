@@ -3,16 +3,15 @@
 <div class="container">
     <table class="table">
         <thead>
-            <th>Name</th>
-            <th>Category</th>
-            <th>Description</th>
-            <th>Price</th>
-            <th>Stock</th>
-            <th>Edit</th>
-            <th>Delete</th>
+        <th>Name</th>
+        <th>Category</th>
+        <th>Description</th>
+        <th>Price</th>
+        <th>Stock</th>
+        <th>Shop</th>
         </thead>
-       <tbody>
-           @foreach (var item in Model)
+        <tbody>
+            @foreach (var item in Model)
             {
                 <tr>
                     <td>@item.Name</td>
@@ -23,15 +22,11 @@
                     <td>@item.Price azn</td>
                     <td>@item.Stock</td>
                     <td>
-                        <a class="btn btn-warning" href="/product/edit/@item.ProductID">Edit</a>
-                    </td>
-                     <td>
-                        <a class="btn btn-danger" href="/product/delete/@item.ProductID"
-                          onclick="return confirm('Are you sure?')"  >Delete</a>
+                        <a href="/Shop/buy/@item.ProductID" class="btn btn-outline-danger btn-sm">Shop Now!</a>
                     </td>
                 </tr>
             }
-       </tbody>
+        </tbody>
     </table>
     <a href="/product/create" class="btn btn-success">Create</a>
 </div>

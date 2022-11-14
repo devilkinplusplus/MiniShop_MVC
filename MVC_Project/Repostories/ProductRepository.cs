@@ -1,43 +1,26 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using MVC_Project.Models;
+using Newtonsoft.Json;
 
 namespace MVC_Project.Repostories
 {
-    public class ProductRepository
+    public class ProductRepository:GenericRepository<Product>
     {
-        AppDbContext dbContext = new AppDbContext();
-
-        public void Add(Product product)
-        {
-            dbContext.Products.Add(product);
-            dbContext.SaveChanges();
-        }
-
-        public void Delete(Product product)
-        {
-            dbContext.Products.Remove(product);
-            dbContext.SaveChanges();
-        }
-
-        public void Update(Product product)
-        {
-            dbContext.Products.Update(product);
-            dbContext.SaveChanges();
-        }
-
-        public Product Get(int id)
-        {
-            return dbContext.Products.Find(id);
-        }
-
-        public List<Product> GetAll()
-        {
-            return dbContext.Products.ToList();
-        }
-
         public List<Product> GetAllActive()
         {
+            using var dbContext = new AppDbContext();
             return dbContext.Products.Include(x=>x.Category).Where(x => x.IsDeleted == false).ToList();
         }
+      
+
+        //public  List<Product> GetAllOthersProduct()
+        //{
+        //    using var dbContext = new AppDbContext();
+
+        //    var sessionUser = JsonConvert.DeserializeObject<User>(HttpContext.Session.GetString("username"));
+
+        //    return dbContext.Products.Include(x => x.Category).Where(x => x.IsDeleted == false && x.UserId!=sessionUser.UserId).ToList();
+        //}
     }
 }

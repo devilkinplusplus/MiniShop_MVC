@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MVC_Project.Models;
 using MVC_Project.Repostories;
+using MVC_Project.ViewModels;
 
 namespace MVC_Project.Controllers
 {
@@ -20,11 +21,15 @@ namespace MVC_Project.Controllers
         }
 
         [HttpPost]
-        public IActionResult Create(Category category)
+        public IActionResult Create(CategoryAddVM category)
         {
             if (ModelState.IsValid)
             {
-                categoryRepo.Add(category);
+                Category newCate = new()
+                {
+                    Name = category.Name
+                };
+                categoryRepo.Add(newCate);
                 return RedirectToAction("Index");
             }
             return View();

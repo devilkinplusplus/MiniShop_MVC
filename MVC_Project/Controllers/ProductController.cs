@@ -1,8 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
 using MVC_Project.Models;
 using MVC_Project.Repostories;
 using MVC_Project.ViewModels;
+using Newtonsoft.Json;
 
 namespace MVC_Project.Controllers
 {
@@ -10,12 +13,21 @@ namespace MVC_Project.Controllers
     {
         ProductRepository productRepository = new ProductRepository();
         AppDbContext appDbContext = new AppDbContext();
-        public IActionResult Index()
+
+        public List<Product> GetAllOthersProduct()
         {
-            var products = productRepository.GetAllActive();  
-            return View(products);
+            using var dbContext = new AppDbContext();
+
+            var sessionUser = JsonConvert.DeserializeObject<User>(HttpContext.Session.GetString("username"));
+
+            return dbContext.Products.Include(x => x.Category).Where(x => x.IsDeleted == false && x.UserId != sessionUser.UserId).ToList();
         }
 
+        public IActionResult Index()
+        {
+            var products = GetAllOthersProduct();  
+            return View(products);
+        }
         public IActionResult Create()
         {
             CategoryValues();
@@ -25,6 +37,8 @@ namespace MVC_Project.Controllers
         [HttpPost]
         public IActionResult Create(ProductCreateVM product)
         {
+            var sessionUser = JsonConvert.DeserializeObject<User>(HttpContext.Session.GetString("username"));
+            product.UserId = sessionUser.UserId;
             if (ModelState.IsValid)
             {
                 Product prod = new()
@@ -34,12 +48,13 @@ namespace MVC_Project.Controllers
                     CategoryID = product.CategoryID,
                     Price = product.Price,
                     Stock = product.Stock,
+                    UserId=sessionUser.UserId
                 };
 
                 productRepository.Add(prod);
                 return RedirectToAction("Index");
             }
-            return View(product);
+            return View();
         }
 
         public IActionResult Edit(int id)

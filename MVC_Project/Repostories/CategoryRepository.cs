@@ -1,41 +1,13 @@
-﻿using MVC_Project.Models;
+﻿using Microsoft.EntityFrameworkCore;
+using MVC_Project.Models;
 
 namespace MVC_Project.Repostories
 {
-    public class CategoryRepository
+    public class CategoryRepository : GenericRepository<Category>
     {
-        AppDbContext dbContext = new AppDbContext();
-
-        public void Add(Category category)
-        {
-            dbContext.Categories.Add(category);
-            dbContext.SaveChanges();
-        }
-
-        public void Delete(Category category)
-        {
-            dbContext.Categories.Remove(category);
-            dbContext.SaveChanges();
-        }
-
-        public void Update(Category category)
-        {
-            dbContext.Categories.Update(category);
-            dbContext.SaveChanges();
-        }
-
-        public Category Get(int id)
-        {
-            return dbContext.Categories.Find(id);
-        }
-
-        public List<Category> GetAll()
-        {
-            return dbContext.Categories.ToList();
-        }
-
         public List<Category> GetAllActive()
         {
+            using var dbContext = new AppDbContext();
             return dbContext.Categories.Where(x=>x.IsDeleted==false).ToList();
         }
     }
