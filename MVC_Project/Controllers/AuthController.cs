@@ -33,8 +33,8 @@ namespace MVC_Project.Controllers
                 userRepository.Add(newUser);
                 return RedirectToAction("Login");
             }
-          
-            return View();
+
+            return View(model);
         }
 
 
@@ -46,7 +46,6 @@ namespace MVC_Project.Controllers
         [HttpPost]
         public async Task<IActionResult> Login(LoginVM model)
         {
-
             var datavalue = appDbContext.Users.FirstOrDefault(x => x.Email == model.Email && x.Password == model.Password);
             if (datavalue != null)
             {
@@ -60,8 +59,12 @@ namespace MVC_Project.Controllers
                 HttpContext.Session.SetString("username", JsonConvert.SerializeObject(datavalue));
                 return RedirectToAction("Index", "Product");
             }
+            else
+            {
+                TempData["login"] = "Email or password is incorrect";
+                return View(model);
+            }
 
-            return View();
         }
     }
 }

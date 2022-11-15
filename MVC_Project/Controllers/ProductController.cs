@@ -14,6 +14,7 @@ namespace MVC_Project.Controllers
         ProductRepository productRepository = new ProductRepository();
         AppDbContext appDbContext = new AppDbContext();
 
+        [NonAction]
         public List<Product> GetAllOthersProduct()
         {
             using var dbContext = new AppDbContext();

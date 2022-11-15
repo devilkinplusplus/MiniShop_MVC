@@ -35,21 +35,26 @@ namespace MVC_Project.Controllers
                 Date = model.Date
             };
 
-            if (sessionUser.Budget >= data.Price)
+            if (sessionUser.Budget >= data.Price && data.Stock > 0)
             {
                 sessionUser.Budget -= data.Price;
 
                 var sellerUser = userRepository.Get(data.UserId);
                 sellerUser.Budget += data.Price;
+                data.Stock--;
 
+                productRepository.Update(data);
                 userRepository.Update(sessionUser);
                 userRepository.Update(sellerUser);
                 salesRepository.Add(newSale);
+                TempData["succes"] = "Successfully bought";
+                return RedirectToAction("Index", "Product");
             }
+            TempData["notEnough"] = "Your budget too low";
 
-            return RedirectToAction("Index", "Product");
+            return RedirectToAction("Buy");
         }
 
-    
+
     }
 }

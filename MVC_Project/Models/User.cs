@@ -9,8 +9,9 @@ namespace MVC_Project.Models
         public string Name { get; set; }
         [StringLength(24, ErrorMessage = "Maximum character limit is 24!")]
         public string LastName { get; set; }
-        [EmailAddress]
+        [EmailAddress(ErrorMessage ="Invalid email adrress")]
         public string Email { get; set; }
+        [StringLength(maximumLength:16,ErrorMessage ="Password length cannot be bigger than 16")]
         public string Password { get; set; }
         public decimal Budget { get; set; } = 0;
         public List<Product>? Products { get; set; }
